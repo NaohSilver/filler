@@ -6,78 +6,13 @@
 /*   By: niludwig <niludwig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 01:33:22 by niludwig          #+#    #+#             */
-/*   Updated: 2017/03/10 22:42:17 by niludwig         ###   ########.fr       */
+/*   Updated: 2017/03/10 23:04:12 by niludwig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
 
-static char *get_line_piece(t_piece *piece, char *line)
-{
-	char *str;
-	int i;
-	int u;
-
-	i = ft_strlen(line);
-	u = 0;
-	str = (char *)malloc(sizeof(char) * i);
-	ft_bzero(str, i);
-	i = 0;
-	while (i != piece->x)
-	{
-		str[i] = line[u];//recup de donner here
-		i++;
-		u++;
-	}
-	str[i] = '\0';
-	return (str);
-}
-
-static t_piece *creat_piece(t_piece *piece, char *line)
-{
-	int i;
-	int u;
-
-	i = 0;
-	u = 0;
-	while (i != piece->y)
-	{
-		while (u != piece->x)
-		{
-			piece->piece[i][u] = '.';
-			u++;
-		}
-		piece->piece[i][u] = '\0';
-		u = 0;
-		i++;
-	}
-	return (piece);
-}
-
-static int voodoo_dance(char *line, t_map *map)
-{
-	t_piece *piece;
-	int i;
-
-	i = -1;
-	if (piece->err != 1)
-	{
-		piece = (t_piece*)malloc(sizeof(t_piece));
-		piece->x = map->piecex;
-		piece->y = map->piecey;
-		piece->i = 0;
-		piece->piece = (char**)malloc(sizeof(char*) * piece->y);
-		while ((i < piece->x) && ++i)
-			piece->piece[i] = (char*)malloc(sizeof(char) * piece->x + 1);
-		piece = creat_piece(piece, line);
-	}
-	ft_strcpy(piece->piece[piece->i], get_line_piece(piece, line));
-	piece->i += 1;
-	piece->err = 1;
-	return (1);
-}
-
-static int get_piecey(char *line)
+/*static int get_piecey(char *line)
 {
 	int y;
 
@@ -91,7 +26,7 @@ static int get_piecex(char *line)
 
 	x = get_x(line);
 	return (x);
-}
+}*/
 
 static char *get_line(t_map *map, char *line)
 {
@@ -159,8 +94,9 @@ int main()
 	int i;
 
 	i = -1;
+	map = (t_map*)malloc(sizeof(t_map));
 	map->err = 0;
-	while (get_next_line(0, &line) > 0)
+	while (get_next_line(0, &line) > 0)// idea de parse generale
 	{
 		if (ft_strncmp(line, "$$$ exec p", 10) == 0)
 		{
@@ -176,14 +112,13 @@ int main()
 		{
 			++i;
 			ft_strcpy(map->map[i], get_line(map, line));
+			ft_printf("{green}%s\n", map->map[i]);
 		}
-		if (ft_strncmp(line, "Piece ", 6) == 0)
+/*		if (ft_strncmp(line, "Piece ", 6) == 0)
 		{
 			map->piecex = get_piecex(line);
 			map->piecey = get_piecey(line);
-		}
-		if (ft_strncmp(line, ".", 1) == 0 || ft_strncmp(line, "*", 1) == 0)
-			voodoo_dance(line, map);
+		}*/
 		free(line);
 	}
 	while((i != map->y) && ++i)

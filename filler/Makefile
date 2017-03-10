@@ -6,7 +6,7 @@
 #    By: niludwig <niludwig@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/03/08 01:33:55 by niludwig          #+#    #+#              #
-#    Updated: 2017/03/10 17:04:38 by niludwig         ###   ########.fr        #
+#    Updated: 2017/03/10 22:58:28 by niludwig         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,9 +14,9 @@
 
 NAME = niludwig.filler
 
-SRC = main.c get_map_piece.c creat_map.c
+SRC = main.c creat_map.c
 
-OBJ = main.o get_map_piece.c creat_map.o
+OBJ = main.o creat_map.o
 
 LIB = print/libft/libft.a
 
