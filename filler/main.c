@@ -6,143 +6,11 @@
 /*   By: niludwig <niludwig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 01:33:22 by niludwig          #+#    #+#             */
-/*   Updated: 2017/03/11 17:50:31 by niludwig         ###   ########.fr       */
+/*   Updated: 2017/03/11 17:58:16 by niludwig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
-
-static int get_piecey(char *line)
-{
-	int y;
-
-	y = get_y(line);
-	return (y);
-}
-
-static int get_piecex(char *line)
-{
-	int x;
-
-	x = get_x(line);
-	return (x);
-}
-
-static char *get_line_piece(t_map *map, char *line)
-{
-	char *str;
-	int i;
-
-	i = ft_strlen(line);
-	str = (char *)malloc(sizeof(char) * i + 1);
-	ft_bzero(str, i + 1);
-	i = 0;
-	while (i != map->piecey)
-	{
-		str[i] = line[i];//recup de donner here
-		i++;
-	}
-	str[i] = '\0';
-	return (str);
-}
-
-static char *get_line(t_map *map, char *line)
-{
-	char *str;
-	int i;
-	int u;
-
-	i = ft_strlen(line);
-	u = 4;
-	str = (char *)malloc(sizeof(char) * i - 4);
-	ft_bzero(str, i - 4);
-	i = 0;
-	while (i != map->x)
-	{
-		str[i] = line[u];//recup de donner here
-		i++;
-		u++;
-	}
-	str[i] = '\0';
-	return (str);
-}
-
-static t_map *creat_mapy(t_map *map)
-{
-	int i;
-	int u;
-
-	i = 0;
-	u = 0;
-	while (i != map->y)
-	{
-		while (u != map->x)
-		{
-			map->map[i][u] = '.';
-			u++;
-		}
-		map->map[i][u] = '\0';
-		u = 0;
-		i++;
-	}
-	return (map);
-}
-
-static t_map *get_size_map(char *line, t_map *map)
-{
-	int i;
-
-	i = 0;
-	map->x = get_x(line);
-	map->y = get_y(line);
-	map->map = (char**)malloc(sizeof(char*) * map->y);
-	while (i < map->x)
-	{
-		map->map[i] = (char*)malloc(sizeof(char) * map->x + 1);
-		++i;
-	}
-	map = creat_mapy(map);
-	return (map);
-}
-
-static t_map *creat_piece(t_map *map)
-{
-	int i;
-	int u;
-
-	i = 0;
-	u = 0;
-	while (i != map->piecex)
-	{
-		while (u != map->piecey)
-		{
-			map->piece[i][u] = '.';
-			u++;
-		}
-		map->piece[i][u] = '\0';
-		u = 0;
-		i++;
-	}
-	return (map);
-}
-
-static t_map *get_size_piece(t_map *map, char *line)
-{
-	int i;
-
-	i = 0;
-	map->piecex = get_piecex(line);
-	map->piecey = get_piecey(line);
-	map->piecex += 1;
-	map->piece = (char**)malloc(sizeof(char*) * map->piecex);
-	while (i < map->piecex)
-	{
-		map->piece[i] = (char*)malloc(sizeof(char) * map->piecey + 1);
-		++i;
-	}
-	map = creat_piece(map);
-	return (map);
-}
 
 static int ft_pars(t_map *map, char *line)
 {
@@ -181,12 +49,14 @@ static void get_free(t_map *map)
 	i = -1;
 	while((i != map->y) && ++i)
 		free(map->map[i]);
+	free(map->map);
 	i = -1;
 	while((i != map->piecex) && ++i)
 		free(map->piece[i]);
+	free(map->piece);
 }
 
-int main()
+int main()//remaitre a 25ligne
 {
 	t_map	*map;
 	char	*line;

@@ -6,7 +6,7 @@
 /*   By: niludwig <niludwig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 01:31:51 by niludwig          #+#    #+#             */
-/*   Updated: 2017/03/11 17:43:06 by niludwig         ###   ########.fr       */
+/*   Updated: 2017/03/11 17:57:13 by niludwig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,9 @@ typedef struct	s_map
 void creat_map(char *line, t_map *map);
 int get_x(char *line);
 int get_y(char *line);
+char *get_line_piece(t_map *map, char *line);
+t_map *get_size_piece(t_map *map, char *line);
+char *get_line(t_map *map, char *line);
+t_map *get_size_map(char *line, t_map *map);
 
 #endif
