@@ -6,7 +6,7 @@
 /*   By: niludwig <niludwig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 01:33:22 by niludwig          #+#    #+#             */
-/*   Updated: 2017/03/11 17:45:11 by niludwig         ###   ########.fr       */
+/*   Updated: 2017/03/11 17:50:31 by niludwig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,21 @@ static int ft_pars(t_map *map, char *line)
 static t_map *get_x_y(t_map *map)
 {
 	//a fair
+	map->get_x = 1;
+	map->get_y = 1;
 	return (map);
+}
+
+static void get_free(t_map *map)
+{
+	int i;
+
+	i = -1;
+	while((i != map->y) && ++i)
+		free(map->map[i]);
+	i = -1;
+	while((i != map->piecex) && ++i)
+		free(map->piece[i]);
 }
 
 int main()
@@ -203,11 +217,7 @@ int main()
 		free(line);
 	}
 	map = get_x_y(map);
-	ft_printf("%i %i", map->get_y, map->get_x)
-	while((i != map->y) && ++i)
-		free(map->map[i]);
-	i = -1;
-	while((i != map->piecex) && ++i)
-		free(map->piece[i]);
+	ft_printf("{eoc}%i %i\n", map->get_y, map->get_x);
+	get_free(map);
 	return (0);
 }
