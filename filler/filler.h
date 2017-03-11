@@ -6,7 +6,7 @@
 /*   By: niludwig <niludwig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/08 01:31:51 by niludwig          #+#    #+#             */
-/*   Updated: 2017/03/10 22:41:51 by niludwig         ###   ########.fr       */
+/*   Updated: 2017/03/11 17:43:06 by niludwig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,13 @@
 # define ERROR -42
 # define P1 'O'
 # define p2 'X'
-# define print ft_printf("you\n")
+# define print ft_printf("yo\n")
+# define printi ft_printf("%i\n", i)
+# define printu ft_printf("%i\n", u)
 
 # include "print/libft/libft.h"
 # include "print/ft_printf.h"
 # include "print/libft/get_next_line.h"
-
-typedef struct		s_piece
-{
-	int				x;
-	int				y;
-	int				i;
-	int				err;
-	char			**piece;
-}					t_piece;
 
 typedef struct	s_map
 {
@@ -38,7 +31,10 @@ typedef struct	s_map
 	int				err;
 	int				piecex;
 	int				piecey;
+	int				get_x;
+	int				get_y;
 	char			**map;
+	char			**piece;
 }					t_map;
 
 void creat_map(char *line, t_map *map);
