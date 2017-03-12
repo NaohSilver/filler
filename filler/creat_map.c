@@ -6,13 +6,13 @@
 /*   By: niludwig <niludwig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 04:24:55 by niludwig          #+#    #+#             */
-/*   Updated: 2017/03/10 18:20:16 by niludwig         ###   ########.fr       */
+/*   Updated: 2017/03/12 03:16:57 by niludwig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
 
-int get_nbr(char *line)
+static int get_nbr(char *line)
 {
 	int i;
 	int u;

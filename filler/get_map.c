@@ -6,67 +6,123 @@
 /*   By: niludwig <niludwig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/11 17:54:01 by niludwig          #+#    #+#             */
-/*   Updated: 2017/03/11 17:56:59 by niludwig         ###   ########.fr       */
+/*   Updated: 2017/03/12 04:54:22 by niludwig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
 
-char *get_line(t_map *map, char *line)
+int		put_piece(t_coord i, t_piece p, t_map map)
 {
-	char *str;
-	int i;
-	int u;
+	t_list	*tmp;
+	t_coord	*in;
+	int		touch;
 
-	i = ft_strlen(line);
-	u = 4;
-	str = (char *)malloc(sizeof(char) * i - 4);
-	ft_bzero(str, i - 4);
-	i = 0;
-	while (i != map->x)
+	tmp = p.piece;
+	touch = 0;
+	while (tmp)
 	{
-		str[i] = line[u];//recup de donner here
-		i++;
-		u++;
+		in = tmp->content;
+		if (i.y + in->y < 0 || i.y + in->y >= map.coord.y ||\
+			i.x + in->x < 0 || i.x + in->x >= map.coord.x)
+			return (0);
+		if (map.map[i.y + in->y][i.x + in->x] != map.player && \
+			map.map[i.y + in->y][i.x + in->x] != '.')
+			return (0);
+		if (map.map[i.y + in->y][i.x + in->x] == map.player)
+			touch++;
+		tmp = tmp->next;
 	}
-	str[i] = '\0';
-	return (str);
+	return (touch == 1 ? 1 : 0);
 }
 
-static t_map *creat_mapy(t_map *map)
+t_list	*get_all_possition(t_piece piece, t_map map)
 {
-	int i;
-	int u;
+	t_coord	coord;
+	t_list	*lst;
 
-	i = 0;
-	u = 0;
-	while (i != map->y)
+	coord.y = -(piece.coord.y) - 1;
+	lst = NULL;
+	while (++(coord.y) <= map.coord.y - piece.coord.y)
 	{
-		while (u != map->x)
+		coord.x = -(map.coord.x) - 1;
+		while (++(coord.x) <= map.coord.x - piece.coord.x)
+			if (put_piece(coord, piece, map) == 1)
+				ft_lstadd_back(&lst, ft_lstnew(&coord, sizeof(t_coord)));
+	}
+	return (lst);
+}
+
+t_coord	get_value(t_list *tmp, t_list *tmp1, t_list *tmp2, t_coord *val)
+{
+	t_coord	coord;
+
+	coord.x = -1;
+	coord.y = -1;
+	if (ft_abs(((t_coord*)(tmp1->content))->x + ((t_coord*)\
+	(tmp->content))->x - ((t_coord*)(tmp2->content))->x) + ft_abs((\
+	(t_coord*)(tmp1->content))->y + ((t_coord*)(tmp->content))->y -\
+	((t_coord*)(tmp2->content))->y) <= val->x + val->y)
+	{
+		val->x = ft_abs(((t_coord*)(tmp1->content))->x + ((t_coord*)\
+		(tmp->content))->x - ((t_coord*)(tmp2->content))->x);
+		val->y = ft_abs(((t_coord*)(tmp1->content))->y + ((t_coord*)\
+		(tmp->content))->y - ((t_coord*)(tmp2->content))->y);
+		coord = *((t_coord*)(tmp->content));
+	}
+	return (coord);
+}
+
+t_coord	get_coord_hard(t_list *all, t_list *p, t_list *p2, t_coord size)
+{
+	t_list	*tmp;
+	t_list	*tmp1;
+	t_list	*tmp2;
+	t_coord	val;
+	t_coord	co;
+
+	tmp = all;
+	val = size;
+	while (tmp)
+	{
+		tmp1 = p;
+		while (tmp1)
 		{
-			map->map[i][u] = '.';
-			u++;
+			tmp2 = p2;
+			while (tmp2)
+			{
+				if (get_value(tmp, tmp1, tmp2, &val).x != -1)
+					co = get_value(tmp, tmp1, tmp2, &val);
+				tmp2 = tmp2->next;
+			}
+			tmp1 = tmp1->next;
 		}
-		map->map[i][u] = '\0';
-		u = 0;
-		i++;
+		tmp = tmp->next;
 	}
-	return (map);
+	return (co);
 }
 
-t_map *get_size_map(char *line, t_map *map)
+t_coord	get_lst_coord(t_piece piece, t_map map, t_list *lst)
 {
-	int i;
+	t_coord	coord;
+	t_list	*lst2;
 
-	i = 0;
-	map->x = get_x(line);
-	map->y = get_y(line);
-	map->map = (char**)malloc(sizeof(char*) * map->y);
-	while (i < map->x)
+	lst2 = get_all_possition(piece, map);
+	if (!lst2)
 	{
-		map->map[i] = (char*)malloc(sizeof(char) * map->x + 1);
-		++i;
+		coord.x = 0;
+		coord.y = 0;
+		free_map(map);
 	}
-	map = creat_mapy(map);
-	return (map);
+	else
+	{
+		if (lst && put_coord(lst2, piece.piece, map).y < map.coord.y)
+			coord = put_coord(lst2, piece.piece, map);
+		else if (!lst || (map.coord.y == 15 && map.player == 'X'))
+			coord = *((t_coord*)(lst2->content));
+		else
+			coord = get_coord_hard(lst2, piece.piece, lst, map.coord);
+		free_list(&lst2);
+	}
+	return (coord);
 }

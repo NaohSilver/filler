@@ -6,81 +6,83 @@
 /*   By: niludwig <niludwig@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/11 17:54:12 by niludwig          #+#    #+#             */
-/*   Updated: 2017/03/11 17:57:38 by niludwig         ###   ########.fr       */
+/*   Updated: 2017/03/12 04:48:11 by niludwig         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
 
-static int get_piecey(char *line)
+void	free_map(t_map map)
 {
-	int y;
+	int		i;
 
-	y = get_y(line);
-	return (y);
+	i = -1;
+	while (++i < map.coord.y)
+		free(map.map[i]);
+	free(map.map);
 }
 
-static int get_piecex(char *line)
+void	free_list(t_list **lst)
 {
-	int x;
-
-	x = get_x(line);
-	return (x);
+	if (((*lst)->next))
+		free_list(&(*lst)->next);
+	free((*lst)->content);
+	free(*lst);
 }
 
-char *get_line_piece(t_map *map, char *line)
+int		not_putable(t_map map, int side)
 {
-	char *str;
-	int i;
+	int		i;
 
-	i = ft_strlen(line);
-	str = (char *)malloc(sizeof(char) * i + 1);
-	ft_bzero(str, i + 1);
-	i = 0;
-	while (i != map->piecey)
+	i = -1;
+	if (side % 2 == 0)
 	{
-		str[i] = line[i];//recup de donner here
-		i++;
-	}
-	str[i] = '\0';
-	return (str);
-}
-
-static t_map *creat_piece(t_map *map)
-{
-	int i;
-	int u;
-
-	i = 0;
-	u = 0;
-	while (i != map->piecex)
-	{
-		while (u != map->piecey)
+		while (++i < map.coord.y)
 		{
-			map->piece[i][u] = '.';
-			u++;
+			if (side == 0 && map.map[i][0] == map.player)
+				return (1);
+			if (side == 2 && map.map[i][map.coord.x - 1] == map.player)
+				return (1);
 		}
-		map->piece[i][u] = '\0';
-		u = 0;
-		i++;
 	}
-	return (map);
+	else
+	{
+		while (++i < map.coord.x)
+		{
+			if (side == 1 && map.map[0][i] == map.player)
+				return (1);
+			if (side == 3 && map.map[map.coord.y - 1][i] == map.player)
+				return (1);
+		}
+	}
+	return (0);
 }
 
-t_map *get_size_piece(t_map *map, char *line)
+t_coord	put_coord(t_list *all, t_list *p, t_map map)
 {
-	int i;
+	t_list	*tp;
+	t_list	*tp1;
+	t_coord	coord;
+	t_coord	v;
 
-	i = 0;
-	map->piecex = get_piecex(line);
-	map->piecey = get_piecey(line);
-	map->piecex += 1;
-	map->piece = (char**)malloc(sizeof(char*) * map->piecex);
-	while (i < map->piecex)
+	tp = all;
+	coord.x = map.coord.x + 1;
+	coord.y = map.coord.y + 1;
+	while (tp)
 	{
-		map->piece[i] = (char*)malloc(sizeof(char) * map->piecey + 1);
-		++i;
+		tp1 = p;
+		while (tp1)
+		{
+			v.x = ((t_coord*)(tp->content))->x + ((t_coord*)(tp1->content))->x;
+			v.y = ((t_coord*)(tp->content))->y + ((t_coord*)(tp1->content))->y;
+			if ((v.x == 0 && not_putable(map, 0) == 0) ||\
+			(v.y == 0 && not_putable(map, 1) == 0) ||\
+			(v.x == map.coord.x - 1 && not_putable(map, 2) == 0) ||\
+			(v.y == map.coord.y + 1 && not_putable(map, 3) == 0))
+				coord = *((t_coord*)(tp->content));
+			tp1 = tp1->next;
+		}
+		tp = tp->next;
 	}
-	map = creat_piece(map);
-	return (map);
+	return (coord);
 }

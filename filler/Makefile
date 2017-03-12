@@ -6,35 +6,37 @@
 #    By: niludwig <niludwig@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/03/08 01:33:55 by niludwig          #+#    #+#              #
-#    Updated: 2017/03/10 22:58:28 by niludwig         ###   ########.fr        #
+#    Updated: 2017/03/12 05:06:35 by niludwig         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-.PHONY: all, clean, fclean, re
-
 NAME = niludwig.filler
-
-SRC = main.c creat_map.c
-
-OBJ = main.o creat_map.o
-
-LIB = print/libft/libft.a
-
-LIBFTPRINTF = print/libftprintf.a
-
-CFLAGS = -Wall -Wextra -Werror
-
 CC = gcc
-
-$(NAME): $(OBJ)
-	$(CC) $(CFLAGS) -o $(NAME) $(SRC) $(OBJ) $(LIB) $(LIBFTPRINTF)
+CFLAG = -Wall -Werror -Wextra
+SRC = main.c get_piece.c get_map.c creat_map.c useless.c
+OBJ = $(SRC:.c=.o)
+LIBFT_PATH = ./print/libft/
+PRINTF_PATH = ./print/
+PRINTF = ./print/libftprintf.a
+LIBFT = ./print/libft/libft.a
+RM = rm -f
 
 all: $(NAME)
 
+$(NAME): $(OBJ)
+	@$(MAKE) -C $(PRINTF_PATH)
+	@$(MAKE) -C $(LIBFT_PATH)
+	@$(CC) -o $(NAME) $(OBJ) -L. $(LIBFT) $(PRINTF)
+
+%.o: %.c
+	@$(CC) $(CFLAG) -o $@ -c $<
+
 clean:
-	rm $(OBJ)
+	@$(MAKE) -C $(LIBFT_PATH) clean
+	@$(RM) $(OBJ)
 
 fclean: clean
-	rm $(NAME)
+	@$(MAKE) -C $(LIBFT_PATH) fclean
+	@$(RM) $(NAME)
 
 re: fclean all
